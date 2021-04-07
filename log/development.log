@@ -1,0 +1,1398 @@
+  [1m[35m (416.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY) [0m
+  [1m[35m (119.5ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7155997081170417795);[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateUsers (1)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (87.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "username" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "1"]]
+  [1m[35m (29.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateChatrooms (2)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (123.4ms)[0m  [1m[35mCREATE TABLE "chatrooms" ("id" serial primary key, "topic" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "2"]]
+  [1m[35m (18.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateMessages (3)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (91.8ms)[0m  [1m[35mCREATE TABLE "messages" ("id" serial primary key, "content" character varying, "user_id" integer, "chatroom_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_273a25a7a6"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_5d3b5a27f5"
+FOREIGN KEY ("chatroom_id")
+  REFERENCES "chatrooms" ("id")
+) [0m
+  [1m[35m (60.9ms)[0m  [1m[35mCREATE  INDEX  "index_messages_on_user_id" ON "messages"  ("user_id")[0m
+  [1m[35m (46.7ms)[0m  [1m[35mCREATE  INDEX  "index_messages_on_chatroom_id" ON "messages"  ("chatroom_id")[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "3"]]
+  [1m[35m (17.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddSlugToChatrooms (4)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "chatrooms" ADD "slug" character varying[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "4"]]
+  [1m[35m (7.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.6ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" ORDER BY "ar_internal_metadata"."key" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", 2021-04-06 11:06:26 UTC], ["updated_at", 2021-04-06 11:06:26 UTC]]
+  [1m[35m (9.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(7155997081170417795)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (2.5ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'chatrooms'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (2.4ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'messages'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (2.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+Started GET "/" for 127.0.0.1 at 2021-04-06 16:36:55 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (0.9ms)
+Started GET "/" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (0.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (2.7ms)
+Completed 200 OK in 4074ms (Views: 4066.7ms | ActiveRecord: 0.0ms)
+
+
+  Rendered layouts/_navbar_links.html.erb (0.8ms)
+  Rendered layouts/_navbar.html.erb (2.1ms)
+Completed 200 OK in 186ms (Views: 184.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.self-7932c8e1ee8096567aff72ca2351d67ecb6421be3aa1bf0cfa74ee7861dfd12f.css?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/jquery.self-660adc51e0224b731d29f575a6f1ec167ba08ad06ed5deca4f1e8654c135bf4c.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/jquery_ujs.self-e87806d0cf4489aeb1bb7288016024e8de67fd18db693fe026fe3907581e53cd.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/button.self-e74d33ba39500940a78d6fa4d2d64f6ca7fd86d60a2149641f7fde7ba711d8a1.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/carousel.self-35d204878d906298e55bc24553e11fd89b980fc4ffe5792fe36af8c0da289c54.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/affix.self-3555752f8a930795ee9e56751a52e6871104ae85d01b3ab8363da3802a5ecc78.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/turbolinks.self-979a09514ef27c84df025c07108a05438ba97cfec71073dcb800a4d327044e02.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/dropdown.self-e56c2ffee4618411d43ecf15c89273f6223847ad756e1cd17545d04afa732ed4.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/collapse.self-056c40532d9f0f126ec17e839f60c942f573fbd61a086e7f156306e3fc5e8c1f.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/modal.self-62463080dba6b9d024ff0a3192da0e76eacbc683194f3395047c6f5cfa0acb59.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/scrollspy.self-52afd90e8ba97d9f08617a13986e8869d6c4a45751c0bff59a6f91241e722aca.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/tab.self-dad0d5c377f9fae26394484535ebb23ccf68afae084f896af6ea4cdf8c9f6ae0.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/transition.self-3b268d4cd8c79e46ded7392885f72f64ffb5b0d49948a12b8cf9779f6163e13a.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/tooltip.self-facdc69246a072acb927ded77ff655f7c27a518b9357fddd45d119fbc8a0ab9f.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/action_cable.self-2231fa0726679abb8d086b191624b8ed235eb844eda2cc9471fa0b6cb4c56a09.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/popover.self-210cff1fb4b72b71a29b5122180cb5937c8145cd13a934dc838280f1d9607a3e.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/cable.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/channels/chatrooms.self-e4713229ed841d924fbbf76987425a78e4a581fe1f8301b6d1cb3895802dd9b7.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/channels/messages.self-5bc995491c022d4c804a1b48a283c7df35fa974520dd6159743999678d574cf9.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/chatrooms.self-ec69bbbf8b3636baa8311f15971f81cd4137c1d1697d54f91558606a230ebe51.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/application.self-76b5c7924bef44847d55a6d91b508622898a3039bfa9a442199dbbac4404f386.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/assets/bootstrap/alert.self-d8b7bd612b3dcfdefb7b5539b9d5848d66ccbd3e7af8bb8d48bfb3288aaa7be8.js?body=1" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-06 16:36:59 +0530
+Started GET "/login" for 127.0.0.1 at 2021-04-06 16:37:05 +0530
+Processing by SessionsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (0.5ms)
+  Rendered sessions/new.html.erb within layouts/application (33.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 97ms (Views: 86.5ms | ActiveRecord: 4.0ms)
+
+
+Started GET "/signup" for 127.0.0.1 at 2021-04-06 16:37:07 +0530
+Processing by RegistrationsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (0.5ms)
+  Rendered registrations/new.html.erb within layouts/application (2.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (1.7ms)
+Completed 200 OK in 58ms (Views: 56.7ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/signup" for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+Processing by RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"xvLOSyb7nVMRnM0TlvtotFqSnooMmbll/Rig8dEDYDQ5TT2W9/eBmfco+5iNkA9mRmjN7ea+nrhBjTVnkD/iBQ==", "user"=>{"username"=>""}, "commit"=>"sign up"}
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", ""], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+Redirected to http://localhost:3000/signup
+Completed 302 Found in 18ms (ActiveRecord: 1.6ms)
+
+
+Started GET "/signup" for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+Processing by RegistrationsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (0.5ms)
+  Rendered registrations/new.html.erb within layouts/application (2.3ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (1.6ms)
+Completed 200 OK in 58ms (Views: 57.0ms | ActiveRecord: 0.0ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/bootstrap/glyphicons-halflings-regular-fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c.woff2" for 127.0.0.1 at 2021-04-06 16:37:09 +0530
+Started POST "/signup" for 127.0.0.1 at 2021-04-06 16:37:33 +0530
+Processing by RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"ue0I6UZCicTRnLFTfMc3YNBMrrM48CLQgmoBE7YXlWMlMFRZftDFsxIr0kEH9J1Jjg3reAUKRZF9HPcTNOniOw==", "user"=>{"username"=>"mayank"}, "commit"=>"sign up"}
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", "mayank"], ["LIMIT", 1]]
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "users" ("username", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["username", "mayank"], ["created_at", 2021-04-06 11:07:33 UTC], ["updated_at", 2021-04-06 11:07:33 UTC]]
+  [1m[35m (66.0ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://localhost:3000/chatrooms
+Completed 302 Found in 77ms (ActiveRecord: 67.9ms)
+
+
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-06 16:37:33 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (1.4ms)
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  Rendered chatrooms/index.html.erb within layouts/application (4.7ms)
+  Rendered layouts/_navbar_links.html.erb (1.1ms)
+  Rendered layouts/_navbar.html.erb (3.2ms)
+Completed 200 OK in 69ms (Views: 56.7ms | ActiveRecord: 3.4ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:37:33 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:37:33 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:37:33 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started POST "/chatrooms" for 127.0.0.1 at 2021-04-06 16:37:42 +0530
+Processing by ChatroomsController#create as JS
+  Parameters: {"utf8"=>"✓", "chatroom"=>{"topic"=>"chat_demo"}, "commit"=>"Create chatroom"}
+  [1m[36mUser Load (1.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Exists (1.3ms)[0m  [1m[34mSELECT  1 AS one FROM "chatrooms" WHERE "chatrooms"."topic" = $1 LIMIT $2[0m  [["topic", "chat_demo"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "chatrooms" ("topic", "created_at", "updated_at", "slug") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["topic", "chat_demo"], ["created_at", 2021-04-06 11:07:42 UTC], ["updated_at", 2021-04-06 11:07:42 UTC], ["slug", "chat_demo"]]
+  [1m[35m (48.3ms)[0m  [1m[35mCOMMIT[0m
+  Rendered chatrooms/create.js.erb (0.5ms)
+Completed 200 OK in 66ms (Views: 2.1ms | ActiveRecord: 51.8ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 16:37:46 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  Rendered messages/_message_form.html.erb (3.0ms)
+  Rendered chatrooms/show.html.erb within layouts/application (19.4ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 80ms (Views: 64.1ms | ActiveRecord: 3.9ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-04-06 16:38:34 +0530
+Processing by WelcomeController#about as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered welcome/about.html.erb within layouts/application (1.9ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.5ms)
+Completed 200 OK in 59ms (Views: 54.3ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/chatrooms/new" for 127.0.0.1 at 2021-04-06 16:38:38 +0530
+Processing by ChatroomsController#new as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered layouts/_flash_errors.html.erb (0.7ms)
+  Rendered chatrooms/new.html.erb within layouts/application (3.1ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 48ms (Views: 45.5ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-06 16:38:40 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (2.1ms)
+  [1m[35m (1.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (3.0ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (0.8ms)
+  Rendered chatrooms/index.html.erb within layouts/application (12.2ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 58ms (Views: 50.2ms | ActiveRecord: 5.5ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 16:38:43 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (1.1ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  Rendered messages/_message_form.html.erb (3.3ms)
+  Rendered chatrooms/show.html.erb within layouts/application (10.1ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (1.5ms)
+Completed 200 OK in 68ms (Views: 61.5ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 16:44:26 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.5ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  Rendered messages/_message_form.html.erb (1.3ms)
+  Rendered chatrooms/show.html.erb within layouts/application (3.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 61ms (Views: 56.4ms | ActiveRecord: 1.4ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:44:26 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:44:26 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:44:26 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-06 16:44:26 +0530
+Started POST "/messages" for 127.0.0.1 at 2021-04-06 16:44:52 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"L44OT379cAQ0q0bPbafkCyNWap78Cpss2lj1uVXn4nezU1L/Rm88c/ccJd0WlE4ifRcvVcHw/G0lLgO51xmVLw==", "message"=>{"content"=>"mlmldmmd", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.9ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "mlmldmmd"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-06 11:14:52 UTC], ["updated_at", 2021-04-06 11:14:52 UTC]]
+  [1m[35m (272.5ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"mlmldmmd", :user=>"mayank"}
+Completed 200 OK in 331ms (ActiveRecord: 274.3ms)
+
+
+MessagesChannel transmitting {"message"=>"mlmldmmd", "user"=>"mayank"} (via streamed from messages)
+Started GET "/" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (0.5ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 50ms (Views: 49.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.self-7932c8e1ee8096567aff72ca2351d67ecb6421be3aa1bf0cfa74ee7861dfd12f.css?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/jquery.self-660adc51e0224b731d29f575a6f1ec167ba08ad06ed5deca4f1e8654c135bf4c.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/jquery_ujs.self-e87806d0cf4489aeb1bb7288016024e8de67fd18db693fe026fe3907581e53cd.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/turbolinks.self-979a09514ef27c84df025c07108a05438ba97cfec71073dcb800a4d327044e02.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/affix.self-3555752f8a930795ee9e56751a52e6871104ae85d01b3ab8363da3802a5ecc78.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/button.self-e74d33ba39500940a78d6fa4d2d64f6ca7fd86d60a2149641f7fde7ba711d8a1.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/carousel.self-35d204878d906298e55bc24553e11fd89b980fc4ffe5792fe36af8c0da289c54.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/collapse.self-056c40532d9f0f126ec17e839f60c942f573fbd61a086e7f156306e3fc5e8c1f.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/dropdown.self-e56c2ffee4618411d43ecf15c89273f6223847ad756e1cd17545d04afa732ed4.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/modal.self-62463080dba6b9d024ff0a3192da0e76eacbc683194f3395047c6f5cfa0acb59.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/scrollspy.self-52afd90e8ba97d9f08617a13986e8869d6c4a45751c0bff59a6f91241e722aca.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/tab.self-dad0d5c377f9fae26394484535ebb23ccf68afae084f896af6ea4cdf8c9f6ae0.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/transition.self-3b268d4cd8c79e46ded7392885f72f64ffb5b0d49948a12b8cf9779f6163e13a.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/tooltip.self-facdc69246a072acb927ded77ff655f7c27a518b9357fddd45d119fbc8a0ab9f.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/action_cable.self-2231fa0726679abb8d086b191624b8ed235eb844eda2cc9471fa0b6cb4c56a09.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/popover.self-210cff1fb4b72b71a29b5122180cb5937c8145cd13a934dc838280f1d9607a3e.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/channels/chatrooms.self-e4713229ed841d924fbbf76987425a78e4a581fe1f8301b6d1cb3895802dd9b7.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/cable.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/channels/messages.self-5bc995491c022d4c804a1b48a283c7df35fa974520dd6159743999678d574cf9.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/chatrooms.self-ec69bbbf8b3636baa8311f15971f81cd4137c1d1697d54f91558606a230ebe51.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/application.self-76b5c7924bef44847d55a6d91b508622898a3039bfa9a442199dbbac4404f386.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/assets/bootstrap/alert.self-d8b7bd612b3dcfdefb7b5539b9d5848d66ccbd3e7af8bb8d48bfb3288aaa7be8.js?body=1" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:45:48 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/signup" for 127.0.0.1 at 2021-04-06 16:45:52 +0530
+Processing by RegistrationsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (0.5ms)
+  Rendered registrations/new.html.erb within layouts/application (2.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 49ms (Views: 48.2ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/signup" for 127.0.0.1 at 2021-04-06 16:45:57 +0530
+Processing by RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"K2Sdx7nkHn+oLlivYre8YMlx6+RaYn8IodZG5dkiIH2LB3po0icQLbU9NhJXxGYOs6DVt7b4ulaRGa3UOcA78w==", "user"=>{"username"=>"rachit"}, "commit"=>"sign up"}
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (0.8ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", "rachit"], ["LIMIT", 1]]
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "users" ("username", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["username", "rachit"], ["created_at", 2021-04-06 11:15:57 UTC], ["updated_at", 2021-04-06 11:15:57 UTC]]
+  [1m[35m (17.3ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://localhost:3000/chatrooms
+Completed 302 Found in 25ms (ActiveRecord: 18.9ms)
+
+
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-06 16:45:57 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (1.9ms)
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (0.7ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (1.3ms)
+  Rendered chatrooms/index.html.erb within layouts/application (8.5ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 54ms (Views: 50.7ms | ActiveRecord: 1.7ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:45:57 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:45:57 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:45:57 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 16:45:59 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.4ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [1 times] (3.4ms)
+  Rendered messages/_message_form.html.erb (2.0ms)
+  Rendered chatrooms/show.html.erb within layouts/application (12.4ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 49ms (Views: 44.7ms | ActiveRecord: 2.3ms)
+
+
+Started POST "/messages" for 127.0.0.1 at 2021-04-06 16:46:22 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"uj3mEAUk9girZwucaMVjmLfbBCvDloYGk0o4Tmj5dkNfLTGFbgNEFH7+aWbEoyCodki4LLUDyPMAMWOaKcEEcA==", "message"=>{"content"=>"how r u", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.5ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "how r u"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-06 11:16:22 UTC], ["updated_at", 2021-04-06 11:16:22 UTC]]
+  [1m[35m (20.6ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"how r u", :user=>"rachit"}
+Completed 200 OK in 33ms (ActiveRecord: 22.9ms)
+
+
+MessagesChannel transmitting {"message"=>"how r u", "user"=>"rachit"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"how r u", "user"=>"rachit"} (via streamed from messages)
+Started POST "/messages" for 127.0.0.1 at 2021-04-06 16:47:08 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"L44OT379cAQ0q0bPbafkCyNWap78Cpss2lj1uVXn4nezU1L/Rm88c/ccJd0WlE4ifRcvVcHw/G0lLgO51xmVLw==", "message"=>{"content"=>"am good , you say", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "am good , you say"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-06 11:17:08 UTC], ["updated_at", 2021-04-06 11:17:08 UTC]]
+  [1m[35m (38.5ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"am good , you say", :user=>"mayank"}
+Completed 200 OK in 45ms (ActiveRecord: 40.3ms)
+
+
+MessagesChannel transmitting {"message"=>"am good , you say", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"am good , you say", "user"=>"mayank"} (via streamed from messages)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 16:51:22 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.6ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [3 times] (2.6ms)
+  Rendered messages/_message_form.html.erb (1.8ms)
+  Rendered chatrooms/show.html.erb within layouts/application (10.1ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.5ms)
+Completed 200 OK in 80ms (Views: 71.9ms | ActiveRecord: 3.1ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:51:22 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 16:51:22 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 16:51:22 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-06 16:51:23 +0530
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-06 18:15:56 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (0.8ms)
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (0.4ms)
+  Rendered chatrooms/index.html.erb within layouts/application (4.4ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 369ms (Views: 363.3ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-06 18:27:14 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [3 times] (2.9ms)
+  Rendered messages/_message_form.html.erb (1.5ms)
+  Rendered chatrooms/show.html.erb within layouts/application (16.5ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 72ms (Views: 56.1ms | ActiveRecord: 2.8ms)
+
+
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 18:29:47 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-06 18:29:47 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 18:29:47 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 18:29:47 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started POST "/messages" for 127.0.0.1 at 2021-04-06 18:51:28 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"0Q7xrZ9LJiuua1OBeD8SHcWv37zEs/meiWAzAc+0iWSaCrDoK2TMtjHsyaBAta7iO062dTSa+HpkXntsHObpTQ==", "message"=>{"content"=>"ya fine", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "ya fine"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-06 13:22:43 UTC], ["updated_at", 2021-04-06 13:22:43 UTC]]
+  [1m[35m (45.0ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"ya fine", :user=>"mayank"}
+Completed 200 OK in 74520ms (ActiveRecord: 52.5ms)
+
+
+MessagesChannel transmitting {"message"=>"ya fine", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"ya fine", "user"=>"mayank"} (via streamed from messages)
+Started POST "/messages" for 127.0.0.1 at 2021-04-06 18:53:43 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"uj3mEAUk9girZwucaMVjmLfbBCvDloYGk0o4Tmj5dkNfLTGFbgNEFH7+aWbEoyCodki4LLUDyPMAMWOaKcEEcA==", "message"=>{"content"=>"nothing", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "nothing"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-06 13:23:43 UTC], ["updated_at", 2021-04-06 13:23:43 UTC]]
+  [1m[35m (19.3ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"nothing", :user=>"rachit"}
+MessagesChannel transmitting {"message"=>"nothing", "user"=>"rachit"} (via streamed from messages)
+Completed 200 OK in 48ms (ActiveRecord: 20.5ms)
+
+
+MessagesChannel transmitting {"message"=>"nothing", "user"=>"rachit"} (via streamed from messages)
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-06 21:00:12 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 11:53:59 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (53.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:00 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 11:54:04 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+Redirected to http://localhost:3000/
+Filter chain halted as :authenticate_user! rendered or redirected
+Completed 302 Found in 36ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-04-07 11:54:04 +0530
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (1.5ms)
+  Rendered layouts/_navbar_links.html.erb (0.7ms)
+  Rendered layouts/_navbar.html.erb (2.1ms)
+Completed 200 OK in 1303ms (Views: 1289.3ms | ActiveRecord: 0.0ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:05 +0530
+Started GET "/assets/chatrooms.self-efbc6c7939756885e9ea7fdb51e5d38da0693b59cb09ae4fbd7e8e5068842a36.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:05 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 11:54:05 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:05 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-07 11:54:11 +0530
+Processing by ChatroomsController#index as HTML
+Redirected to http://localhost:3000/
+Filter chain halted as :authenticate_user! rendered or redirected
+Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-04-07 11:54:11 +0530
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (0.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.7ms)
+  Rendered layouts/_navbar.html.erb (1.8ms)
+Completed 200 OK in 74ms (Views: 72.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/login" for 127.0.0.1 at 2021-04-07 11:54:14 +0530
+Processing by SessionsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (1.1ms)
+  Rendered sessions/new.html.erb within layouts/application (221.8ms)
+  Rendered layouts/_navbar_links.html.erb (1.0ms)
+  Rendered layouts/_navbar.html.erb (2.8ms)
+Completed 200 OK in 723ms (Views: 309.4ms | ActiveRecord: 306.1ms)
+
+
+Started POST "/login" for 127.0.0.1 at 2021-04-07 11:54:19 +0530
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"ODdlBzitxVL2CNIuml6j6/bagWYI7K/phD1P1NoKdPu58oCyLyrzGxM224Ln0KpEW0Njrq6PvzI31ltuL505vw==", "user"=>{"username"=>"mayank"}, "commit"=>"log in"}
+  [1m[36mUser Load (56.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", "mayank"], ["LIMIT", 1]]
+Redirected to http://localhost:3000/chatrooms
+Completed 302 Found in 102ms (ActiveRecord: 56.5ms)
+
+
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-07 11:54:19 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (1.3ms)
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (0.6ms)
+  Rendered chatrooms/index.html.erb within layouts/application (19.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 186ms (Views: 73.7ms | ActiveRecord: 42.5ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:19 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 11:54:19 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:19 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 11:54:21 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (66.7ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [5 times] (6.7ms)
+  Rendered messages/_message_form.html.erb (24.5ms)
+  Rendered chatrooms/show.html.erb within layouts/application (181.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.5ms)
+Completed 200 OK in 242ms (Views: 163.7ms | ActiveRecord: 69.4ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Processing by WelcomeController#about as HTML
+  Rendered welcome/about.html.erb within layouts/application (0.5ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 66ms (Views: 65.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.self-7932c8e1ee8096567aff72ca2351d67ecb6421be3aa1bf0cfa74ee7861dfd12f.css?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/affix.self-3555752f8a930795ee9e56751a52e6871104ae85d01b3ab8363da3802a5ecc78.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/alert.self-d8b7bd612b3dcfdefb7b5539b9d5848d66ccbd3e7af8bb8d48bfb3288aaa7be8.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/jquery.self-660adc51e0224b731d29f575a6f1ec167ba08ad06ed5deca4f1e8654c135bf4c.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/jquery_ujs.self-e87806d0cf4489aeb1bb7288016024e8de67fd18db693fe026fe3907581e53cd.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/button.self-e74d33ba39500940a78d6fa4d2d64f6ca7fd86d60a2149641f7fde7ba711d8a1.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/carousel.self-35d204878d906298e55bc24553e11fd89b980fc4ffe5792fe36af8c0da289c54.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/collapse.self-056c40532d9f0f126ec17e839f60c942f573fbd61a086e7f156306e3fc5e8c1f.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/dropdown.self-e56c2ffee4618411d43ecf15c89273f6223847ad756e1cd17545d04afa732ed4.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/modal.self-62463080dba6b9d024ff0a3192da0e76eacbc683194f3395047c6f5cfa0acb59.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/scrollspy.self-52afd90e8ba97d9f08617a13986e8869d6c4a45751c0bff59a6f91241e722aca.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/tab.self-dad0d5c377f9fae26394484535ebb23ccf68afae084f896af6ea4cdf8c9f6ae0.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/transition.self-3b268d4cd8c79e46ded7392885f72f64ffb5b0d49948a12b8cf9779f6163e13a.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/tooltip.self-facdc69246a072acb927ded77ff655f7c27a518b9357fddd45d119fbc8a0ab9f.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/bootstrap/popover.self-210cff1fb4b72b71a29b5122180cb5937c8145cd13a934dc838280f1d9607a3e.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/action_cable.self-2231fa0726679abb8d086b191624b8ed235eb844eda2cc9471fa0b6cb4c56a09.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/cable.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/channels/chatrooms.self-e4713229ed841d924fbbf76987425a78e4a581fe1f8301b6d1cb3895802dd9b7.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/channels/messages.self-5bc995491c022d4c804a1b48a283c7df35fa974520dd6159743999678d574cf9.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/chatrooms.self-efbc6c7939756885e9ea7fdb51e5d38da0693b59cb09ae4fbd7e8e5068842a36.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/application.self-76b5c7924bef44847d55a6d91b508622898a3039bfa9a442199dbbac4404f386.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/assets/turbolinks.self-979a09514ef27c84df025c07108a05438ba97cfec71073dcb800a4d327044e02.js?body=1" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:39 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/login" for 127.0.0.1 at 2021-04-07 11:54:42 +0530
+Processing by SessionsController#new as HTML
+  Rendered layouts/_flash_errors.html.erb (0.6ms)
+  Rendered sessions/new.html.erb within layouts/application (3.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 46ms (Views: 44.6ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/login" for 127.0.0.1 at 2021-04-07 11:54:46 +0530
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"N5HzLeg22Nnp+TnPXydcVw1K7ywoRkVJyAPVUe+WZS5eWNjfhxa+D4zSBn39a69LdAKKja+HLjUCsTivVVIE7g==", "user"=>{"username"=>"rachit"}, "commit"=>"log in"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", "rachit"], ["LIMIT", 1]]
+Redirected to http://localhost:3000/chatrooms
+Completed 302 Found in 4ms (ActiveRecord: 0.5ms)
+
+
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-07 11:54:46 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (1.0ms)
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (0.5ms)
+  Rendered chatrooms/index.html.erb within layouts/application (5.0ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.8ms)
+Completed 200 OK in 62ms (Views: 58.0ms | ActiveRecord: 1.5ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:46 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 11:54:46 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 11:54:46 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 11:54:48 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.7ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [5 times] (4.8ms)
+  Rendered messages/_message_form.html.erb (1.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (12.2ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.2ms)
+Completed 200 OK in 65ms (Views: 59.8ms | ActiveRecord: 2.8ms)
+
+
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 12:10:04 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 12:10:04 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 12:10:04 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 12:10:04 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is streaming from messages
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 13:01:50 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"+YD1XP91xoRUR/kuIw57UcbVdGK9WNPrbu1mY80DBUsJmEQDCHOdYMnDsawr2zB+PZG/T+9mMDlT3cyk2OWNkw==", "message"=>{"content"=>"gm", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (74.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "gm"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 07:31:50 UTC], ["updated_at", 2021-04-07 07:31:50 UTC]]
+  [1m[35m (33.1ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"gm", :user=>"mayank"}
+MessagesChannel transmitting {"message"=>"gm", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"gm", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"gm", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"gm", "user"=>"mayank"} (via streamed from messages)
+Completed 200 OK in 230ms (ActiveRecord: 115.8ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 13:48:44 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [6 times] (4.9ms)
+  Rendered messages/_message_form.html.erb (119.7ms)
+  Rendered chatrooms/show.html.erb within layouts/application (197.5ms)
+  Rendered layouts/_navbar_links.html.erb (1.3ms)
+  Rendered layouts/_navbar.html.erb (12.3ms)
+Completed 200 OK in 1554ms (Views: 1534.4ms | ActiveRecord: 1.7ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 13:48:45 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/assets/channels/messages.self-de7163e3df50b69672e4e01853c638988d15259f4c47fd43f0ad4ec3365f333c.js?body=1" for 127.0.0.1 at 2021-04-07 13:48:45 +0530
+Started GET "/assets/chatrooms.self-3c6f2e7d3119aa2a176d97d18729124ff16c701aea3e2772b0e43958cb171fcb.js?body=1" for 127.0.0.1 at 2021-04-07 13:48:45 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 13:48:45 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 13:48:45 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 13:48:46 +0530
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.5ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [6 times] (5.6ms)
+  Rendered messages/_message_form.html.erb (1.4ms)
+  Rendered chatrooms/show.html.erb within layouts/application (13.8ms)
+  Rendered layouts/_navbar_links.html.erb (1.7ms)
+  Rendered layouts/_navbar.html.erb (3.9ms)
+Completed 200 OK in 94ms (Views: 89.9ms | ActiveRecord: 1.7ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+MessagesChannel stopped streaming from messages
+MessagesChannel stopped streaming from messages
+MessagesChannel stopped streaming from messages
+Started GET "/assets/channels/messages.self-de7163e3df50b69672e4e01853c638988d15259f4c47fd43f0ad4ec3365f333c.js?body=1" for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+Started GET "/assets/chatrooms.self-3c6f2e7d3119aa2a176d97d18729124ff16c701aea3e2772b0e43958cb171fcb.js?body=1" for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 13:48:59 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 13:49:34 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"fTvKyiITtDEtZLJSd1maFol1JJJZkaLf6zqXJ+WSys84vffsJ3LXM/ZQdvdfDD8Wkm4mmDNXifH40zyVouuoRQ==", "message"=>{"content"=>"gm whatsup", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "gm whatsup"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-07 08:19:34 UTC], ["updated_at", 2021-04-07 08:19:34 UTC]]
+  [1m[35m (18.1ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"gm whatsup", :user=>"rachit"}
+Completed 200 OK in 27ms (ActiveRecord: 19.4ms)
+
+
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 13:49:52 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"fTvKyiITtDEtZLJSd1maFol1JJJZkaLf6zqXJ+WSys84vffsJ3LXM/ZQdvdfDD8Wkm4mmDNXifH40zyVouuoRQ==", "message"=>{"content"=>"gm whatsup", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "gm whatsup"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-07 08:19:52 UTC], ["updated_at", 2021-04-07 08:19:52 UTC]]
+  [1m[35m (15.4ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"gm whatsup", :user=>"rachit"}
+Completed 200 OK in 23ms (ActiveRecord: 17.2ms)
+
+
+MessagesChannel transmitting {"message"=>"gm whatsup", "user"=>"rachit"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"gm whatsup", "user"=>"rachit"} (via streamed from messages)
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 14:30:08 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"ZY4GLTnXUzxb64+s8zwBdvi/y2mzZoztUucOtVdbeuhNoYTbIg58OJM5TWkzTegAfNvWXk3ajjFVsy0CVqttjg==", "message"=>{"content"=>"doiing office work", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (1.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "doiing office work"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 09:00:08 UTC], ["updated_at", 2021-04-07 09:00:08 UTC]]
+  [1m[35m (11.5ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"doiing office work", :user=>"mayank"}
+MessagesChannel transmitting {"message"=>"doiing office work", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"doiing office work", "user"=>"mayank"} (via streamed from messages)
+Completed 200 OK in 45ms (ActiveRecord: 18.0ms)
+
+
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 14:34:17 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [9 times] (7.4ms)
+  Rendered messages/_message_form.html.erb (1.5ms)
+  Rendered chatrooms/show.html.erb within layouts/application (17.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 321ms (Views: 293.5ms | ActiveRecord: 1.5ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:34:18 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:34:18 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:34:18 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 14:34:18 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:35:11 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:35:12 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:35:12 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:35:12 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 14:38:45 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"isvNcxGmkyuNXOwdomrn5ZwUHaBxmx4Q64sl3OFUfdmi5E+FCn+8L0WOLthiGw6TGHAAl48nHMzs3wZr4KRqvw==", "message"=>{"content"=>"you say whats going on", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "you say whats going on"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 09:08:45 UTC], ["updated_at", 2021-04-07 09:08:45 UTC]]
+  [1m[35m (19.4ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"you say whats going on", :user=>"mayank"}
+MessagesChannel transmitting {"message"=>"you say whats going on", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"you say whats going on", "user"=>"mayank"} (via streamed from messages)
+[ActionCable] Broadcasting to messages: {:message=>"you say whats going on", :user=>"mayank"}
+Completed 200 OK in 127316ms (ActiveRecord: 30.3ms)
+
+
+MessagesChannel transmitting {"message"=>"you say whats going on", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"you say whats going on", "user"=>"mayank"} (via streamed from messages)
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 14:41:21 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"fTvKyiITtDEtZLJSd1maFol1JJJZkaLf6zqXJ+WSys84vffsJ3LXM/ZQdvdfDD8Wkm4mmDNXifH40zyVouuoRQ==", "message"=>{"content"=>"nothing", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (1.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (1.2ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "nothing"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-07 09:11:21 UTC], ["updated_at", 2021-04-07 09:11:21 UTC]]
+  [1m[35m (24.3ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 14:41:37 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [11 times] (10.8ms)
+  Rendered messages/_message_form.html.erb (90.2ms)
+  Rendered chatrooms/show.html.erb within layouts/application (155.4ms)
+  Rendered layouts/_navbar_links.html.erb (1.7ms)
+  Rendered layouts/_navbar.html.erb (3.3ms)
+Completed 200 OK in 1397ms (Views: 1391.0ms | ActiveRecord: 2.3ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:41:38 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:41:38 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:41:38 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 14:41:59 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [11 times] (17.2ms)
+  Rendered messages/_message_form.html.erb (2.2ms)
+  Rendered chatrooms/show.html.erb within layouts/application (26.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (1.5ms)
+Completed 200 OK in 135ms (Views: 127.2ms | ActiveRecord: 1.9ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:00 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:42:00 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:00 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 14:42:00 +0530
+[ActionCable] Broadcasting to messages: {:message=>"nothing", :user=>"rachit"}
+MessagesChannel transmitting {"message"=>"nothing", "user"=>"rachit"} (via streamed from messages)
+Completed 200 OK in 45071ms (ActiveRecord: 28.4ms)
+
+
+MessagesChannel transmitting {"message"=>"nothing", "user"=>"rachit"} (via streamed from messages)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 14:42:13 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.5ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [11 times] (10.7ms)
+  Rendered messages/_message_form.html.erb (1.2ms)
+  Rendered chatrooms/show.html.erb within layouts/application (16.9ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.3ms)
+Completed 200 OK in 60ms (Views: 54.7ms | ActiveRecord: 2.4ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:13 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:42:13 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:13 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 14:42:23 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.5ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [11 times] (9.5ms)
+  Rendered messages/_message_form.html.erb (1.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (14.7ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 63ms (Views: 58.1ms | ActiveRecord: 2.1ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:23 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 14:42:24 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 14:42:24 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 14:42:24 +0530
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 15:01:05 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"ctQpEhcg3BHl2GM+BvpBgIUxHWAKNw9zkzPDW2th+T1a+6vkDPnzFS0KofvGi6j2AVUAV/SLDa+UZ+DsapHuWw==", "message"=>{"content"=>"good", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.9ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "good"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 09:31:05 UTC], ["updated_at", 2021-04-07 09:31:05 UTC]]
+  [1m[35m (20.2ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"good", :user=>"mayank"}
+Completed 200 OK in 5108ms (ActiveRecord: 21.7ms)
+
+
+MessagesChannel transmitting {"message"=>"good", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"good", "user"=>"mayank"} (via streamed from messages)
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:13:05 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [12 times] (14.1ms)
+  Rendered messages/_message_form.html.erb (1.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (20.0ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.8ms)
+Completed 200 OK in 533ms (Views: 529.0ms | ActiveRecord: 1.9ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:06 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/assets/channels/messages.self-ed6324b0ea26c5825e42fa79bf7321ef9b6cf4fd2a8bd0ce5334c86c06214db8.js?body=1" for 127.0.0.1 at 2021-04-07 15:13:06 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:13:06 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:06 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 15:13:06 +0530
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 15:13:16 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"a72/hwU7ICK0GNOgmx81+RU5OaohNFpse+l5bRhNDBEuO4KhAFpDIG8sFwWzSpD5DiI7oEvycUJoANLfXzRumw==", "message"=>{"content"=>"yes", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (3.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.8ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (1.4ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "yes"], ["user_id", 2], ["chatroom_id", 1], ["created_at", 2021-04-07 09:43:16 UTC], ["updated_at", 2021-04-07 09:43:16 UTC]]
+  [1m[35m (18.2ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:13:20 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.6ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (1.0ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [13 times] (16.6ms)
+  Rendered messages/_message_form.html.erb (1.3ms)
+  Rendered chatrooms/show.html.erb within layouts/application (24.7ms)
+  Rendered layouts/_navbar_links.html.erb (1.3ms)
+  Rendered layouts/_navbar.html.erb (2.8ms)
+Completed 200 OK in 90ms (Views: 81.7ms | ActiveRecord: 3.2ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:20 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/assets/channels/messages.self-ed6324b0ea26c5825e42fa79bf7321ef9b6cf4fd2a8bd0ce5334c86c06214db8.js?body=1" for 127.0.0.1 at 2021-04-07 15:13:20 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:13:20 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:20 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:13:25 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.3ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [13 times] (9.4ms)
+  Rendered messages/_message_form.html.erb (3.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (18.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.6ms)
+  Rendered layouts/_navbar.html.erb (2.9ms)
+Completed 200 OK in 76ms (Views: 71.8ms | ActiveRecord: 1.8ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:25 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:13:25 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:25 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 15:13:25 +0530
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 15:13:42 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"SQm0T8oYRHqHN825ykYcpVv9eC5tO/2414Ps1VhdMl1hJja50cFrfk/lD3wKN/XT35llGZOH/2TQ189iWa0lOw==", "message"=>{"content"=>"had lunch", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (1.0ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "had lunch"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 09:43:42 UTC], ["updated_at", 2021-04-07 09:43:42 UTC]]
+  [1m[35m (28.9ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:13:54 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.8ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [14 times] (13.7ms)
+  Rendered messages/_message_form.html.erb (1.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (19.4ms)
+  Rendered layouts/_navbar_links.html.erb (0.7ms)
+  Rendered layouts/_navbar.html.erb (2.0ms)
+Completed 200 OK in 70ms (Views: 63.6ms | ActiveRecord: 3.0ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:54 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:13:54 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:54 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:13:59 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (2.8ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.6ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [14 times] (16.3ms)
+  Rendered messages/_message_form.html.erb (1.2ms)
+  Rendered chatrooms/show.html.erb within layouts/application (22.0ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 88ms (Views: 73.3ms | ActiveRecord: 4.5ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:59 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:13:59 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:13:59 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 15:14:00 +0530
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:14:04 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.2ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [14 times] (13.1ms)
+  Rendered messages/_message_form.html.erb (1.1ms)
+  Rendered chatrooms/show.html.erb within layouts/application (17.9ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (2.2ms)
+Completed 200 OK in 68ms (Views: 64.2ms | ActiveRecord: 1.6ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:14:04 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:14:04 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:14:04 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 15:14:04 +0530
+Started GET "/chatrooms/chat_demo" for 127.0.0.1 at 2021-04-07 15:14:05 +0530
+Processing by ChatroomsController#show as HTML
+  Parameters: {"slug"=>"chat_demo"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."slug" = $1 LIMIT $2[0m  [["slug", "chat_demo"], ["LIMIT", 1]]
+  [1m[36mMessage Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "messages" WHERE "messages"."chatroom_id" = $1 LIMIT $2[0m  [["chatroom_id", 1], ["LIMIT", 1]]
+  [1m[36mMessage Load (0.3ms)[0m  [1m[34mSELECT "messages".* FROM "messages" WHERE "messages"."chatroom_id" = $1[0m  [["chatroom_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered collection of messages/_message.html.erb [14 times] (13.8ms)
+  Rendered messages/_message_form.html.erb (1.5ms)
+  Rendered chatrooms/show.html.erb within layouts/application (20.2ms)
+  Rendered layouts/_navbar_links.html.erb (0.5ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 77ms (Views: 69.6ms | ActiveRecord: 2.1ms)
+
+
+Finished "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:14:05 +0530
+MessagesChannel stopped streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 15:14:05 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 15:14:05 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/assets/favicon-a4719dc1bd22f7aa97ab82501566399507f41fb4b79770c0480e3518f6109523.ico" for 127.0.0.1 at 2021-04-07 15:14:06 +0530
+[ActionCable] Broadcasting to messages: {:message=>"had lunch", :user=>"mayank"}
+Completed 200 OK in 33764ms (ActiveRecord: 31.4ms)
+
+
+MessagesChannel transmitting {"message"=>"had lunch", "user"=>"mayank"} (via streamed from messages)
+MessagesChannel transmitting {"message"=>"had lunch", "user"=>"mayank"} (via streamed from messages)
+[ActionCable] Broadcasting to messages: {:message=>"yes", :user=>"rachit"}
+MessagesChannel transmitting {"message"=>"yes", "user"=>"rachit"} (via streamed from messages)
+Completed 200 OK in 65270ms (ActiveRecord: 25.1ms)
+
+
+MessagesChannel transmitting {"message"=>"yes", "user"=>"rachit"} (via streamed from messages)
+Started POST "/messages" for 127.0.0.1 at 2021-04-07 15:14:47 +0530
+Processing by MessagesController#create as JS
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"IB8zjH37g5wHdrsjGTqyyAZW2PCHdRtismm17zza3yoIMLF6ZiKsmM+keebZS1u+gjLFx3nJGb61PZZYPSrITA==", "message"=>{"content"=>"great", "chatroom_id"=>"1"}, "commit"=>"send"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mChatroom Load (0.4ms)[0m  [1m[34mSELECT  "chatrooms".* FROM "chatrooms" WHERE "chatrooms"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (2.1ms)[0m  [1m[32mINSERT INTO "messages" ("content", "user_id", "chatroom_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "great"], ["user_id", 1], ["chatroom_id", 1], ["created_at", 2021-04-07 09:44:47 UTC], ["updated_at", 2021-04-07 09:44:47 UTC]]
+  [1m[35m (17.1ms)[0m  [1m[35mCOMMIT[0m
+[ActionCable] Broadcasting to messages: {:message=>"great", :user=>"mayank"}
+MessagesChannel transmitting {"message"=>"great", "user"=>"mayank"} (via streamed from messages)
+Completed 200 OK in 30ms (ActiveRecord: 20.4ms)
+
+
+MessagesChannel transmitting {"message"=>"great", "user"=>"mayank"} (via streamed from messages)
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 17:25:52 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 17:25:52 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 17:25:52 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 17:25:52 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/" for 127.0.0.1 at 2021-04-07 17:28:44 +0530
+Processing by WelcomeController#about as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered welcome/about.html.erb within layouts/application (55.2ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.4ms)
+Completed 200 OK in 797ms (Views: 771.2ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/assets/channels/messages.self-6514d68666822b578a27117b3e6ec7ddb96fecff95cd1a89a312685dc33ebff3.js?body=1" for 127.0.0.1 at 2021-04-07 17:28:45 +0530
+Started GET "/cable" for 127.0.0.1 at 2021-04-07 17:28:46 +0530
+Started GET "/cable/" [WebSocket] for 127.0.0.1 at 2021-04-07 17:28:46 +0530
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: Upgrade, HTTP_UPGRADE: websocket)
+MessagesChannel is transmitting the subscription confirmation
+MessagesChannel is streaming from messages
+Started GET "/chatrooms" for 127.0.0.1 at 2021-04-07 17:28:58 +0530
+Processing by ChatroomsController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered chatrooms/_chatroom_form.html.erb (93.6ms)
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "chatrooms"[0m
+  [1m[36mChatroom Load (0.2ms)[0m  [1m[34mSELECT "chatrooms".* FROM "chatrooms"[0m
+  Rendered collection of chatrooms/_chatroom.html.erb [1 times] (0.5ms)
+  Rendered chatrooms/index.html.erb within layouts/application (97.8ms)
+  Rendered layouts/_navbar_links.html.erb (0.4ms)
+  Rendered layouts/_navbar.html.erb (1.2ms)
+Completed 200 OK in 143ms (Views: 135.3ms | ActiveRecord: 2.1ms)
+
+
